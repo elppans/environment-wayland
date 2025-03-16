@@ -3,54 +3,54 @@ KWIN_DRM_FORM_EGL_STREAMS=1
 # KWIN_COMPOSE=0 # Desativado: causa problemas com Spectacle
 
 # NVidia
-export QT_QPA_PLATFORMTHEME=qt6ct
-export QT_IM_MODULE=ibus
-export QT_AUTO_SCREEN_SCALE_FACTOR=1
-export __GL_SYNC_TO_VBLANK=0
-export NV_PRIME_RENDER_OFFLOAD=1
-export __GL_ExperimentalPerfStrategy=1
-export QSG_RENDERER_LOOP=basic # Necessário para evitar alto uso de CPU
-# export GBM_BACKEND=nvidia-drm # Comentado para evitar conflitos
-# export __GLX_VENDOR_LIBRARY_NAME=nvidia # NVidia 470.182.03-1+ não inicia login gráfico
-export VK_LAYER_NV_optimus=NVIDIA_only
+QT_QPA_PLATFORMTHEME=qt6ct
+QT_IM_MODULE=ibus
+QT_AUTO_SCREEN_SCALE_FACTOR=1
+__GL_SYNC_TO_VBLANK=0
+NV_PRIME_RENDER_OFFLOAD=1
+__GL_ExperimentalPerfStrategy=1
+QSG_RENDERER_LOOP=basic # Necessário para evitar alto uso de CPU
+# GBM_BACKEND=nvidia-drm # Comentado para evitar conflitos
+# __GLX_VENDOR_LIBRARY_NAME=nvidia # NVidia 470.182.03-1+ não inicia login gráfico
+VK_LAYER_NV_optimus=NVIDIA_only
 
 # AMD
-export CLUTTER_BACKEND=wayland
-export SDL_VIDEODRIVER=wayland
-export QT_QPA_PLATFORM=wayland
+CLUTTER_BACKEND=wayland
+SDL_VIDEODRIVER=wayland
+QT_QPA_PLATFORM=wayland
 # Forçar o uso do renderizador glamor (para GPUs AMD)
-export GBM_BACKEND=radeonsi
-export LIBGL_ALWAYS_SOFTWARE=0
+GBM_BACKEND=radeonsi
+LIBGL_ALWAYS_SOFTWARE=0
 
 # Gnome (Wayland)
-export __GL_SYNC_TO_VBLANK=0 # Desative o "Modo de Repouso" (VSync)
+__GL_SYNC_TO_VBLANK=0 # Desative o "Modo de Repouso" (VSync)
 
 # Configurações gerais
-# export QT_QPA_PLATFORM=xcb
-export __GL_ExperimentalPerfStrategy=1
-export __GL_MaxFramesAllowed=1
-export GLX_SGI_video_sync=1
-export GLX_OML_sync_control=1
-export MOZ_ENABLE_WAYLAND=1 # Para Firefox no Wayland
+# QT_QPA_PLATFORM=xcb
+__GL_ExperimentalPerfStrategy=1
+__GL_MaxFramesAllowed=1
+GLX_SGI_video_sync=1
+GLX_OML_sync_control=1
+MOZ_ENABLE_WAYLAND=1 # Para Firefox no Wayland
 
 # Configurações gerais para máquinas virtuais
-export LIBGL_ALWAYS_SOFTWARE=1 # Forçar renderização por software (útil para compatibilidade)
-export QSG_RENDER_LOOP=basic # Evitar problemas de renderização em ambientes virtuais
-export QT_QPA_PLATFORM=xcb # Usar XCB como backend gráfico (mais estável em VMs)
+LIBGL_ALWAYS_SOFTWARE=1 # Forçar renderização por software (útil para compatibilidade)
+QSG_RENDER_LOOP=basic # Evitar problemas de renderização em ambientes virtuais
+QT_QPA_PLATFORM=xcb # Usar XCB como backend gráfico (mais estável em VMs)
 
 # QEMU/KVM
-export QEMU_AUDIO_DRV=pa # # Usar PipeWire (compatível com PulseAudio) (melhor compatibilidade)
-export QEMU_VGA=qxl # Usar driver QXL para gráficos (recomendado para SPICE)
-export SPICE_DEBUG_ALLOW_MC=1 # Permitir múltiplos clientes SPICE
-export MESA_GL_VERSION_OVERRIDE=4.5 # Forçar versão do OpenGL (útil para compatibilidade)
+QEMU_AUDIO_DRV=pa # # Usar PipeWire (compatível com PulseAudio) (melhor compatibilidade)
+QEMU_VGA=qxl # Usar driver QXL para gráficos (recomendado para SPICE)
+SPICE_DEBUG_ALLOW_MC=1 # Permitir múltiplos clientes SPICE
+MESA_GL_VERSION_OVERRIDE=4.5 # Forçar versão do OpenGL (útil para compatibilidade)
 
 # VMWare
-export VMWARE_USE_SHIPPED_GTK=1 # Usar GTK fornecido pelo VMWare (melhor integração)
-export SVGA_VGPU10=0 # Desativar aceleração 3D (útil para evitar bugs gráficos)
-# export MESA_GL_VERSION_OVERRIDE=3.3 # Forçar versão do OpenGL (compatibilidade)
+VMWARE_USE_SHIPPED_GTK=1 # Usar GTK fornecido pelo VMWare (melhor integração)
+SVGA_VGPU10=0 # Desativar aceleração 3D (útil para evitar bugs gráficos)
+# MESA_GL_VERSION_OVERRIDE=3.3 # Forçar versão do OpenGL (compatibilidade)
 
 # VirtualBox
-export VBOX_GRAPHICS=1 # Habilitar aceleração gráfica (requer Guest Additions instalado)
-export VBOX_3D=1 # Habilitar suporte a 3D (requer Guest Additions e drivers corretos)
-export VBOX_VGA=std # Usar driver gráfico padrão (recomendado para compatibilidade)
-# export MESA_GL_VERSION_OVERRIDE=3.1 # Forçar versão do OpenGL (compatibilidade)
+VBOX_GRAPHICS=1 # Habilitar aceleração gráfica (requer Guest Additions instalado)
+VBOX_3D=1 # Habilitar suporte a 3D (requer Guest Additions e drivers corretos)
+VBOX_VGA=std # Usar driver gráfico padrão (recomendado para compatibilidade)
+# MESA_GL_VERSION_OVERRIDE=3.1 # Forçar versão do OpenGL (compatibilidade)
