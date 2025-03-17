@@ -43,6 +43,17 @@ detect_nvidia() {
     fi
 }
 
+# Função para detectar se o sistema usa AMD
+detect_amd() {
+    if lspci | grep -i -q "VGA.*AMD"; then
+        echo "AMD detectada."
+        return 0
+    else
+        echo "AMD não detectada."
+        return 1
+    fi
+}
+
 # Função para detectar o ambiente gráfico (Plasma ou GNOME)
 detect_desktop_environment() {
     if [ "$XDG_CURRENT_DESKTOP" = "KDE" ] || [ "$XDG_CURRENT_DESKTOP" = "KDE Plasma" ]; then
@@ -64,12 +75,6 @@ export __GL_MaxFramesAllowed=1 # Limita o número de quadros renderizados (otimi
 export GLX_SGI_video_sync=1 # Habilita sincronização de vídeo SGI (para OpenGL)
 export GLX_OML_sync_control=1 # Habilita controle de sincronização OML (para OpenGL)
 
-# Configurações para KDE Plasma (Wayland)
-if detect_desktop_environment; then
-    export KWIN_DRM_FORM_EGL_STREAMS=1 # Melhora a compatibilidade com drivers EGL no Wayland
-    # export KWIN_COMPOSE=0 # Desativado: causa problemas com Spectacle
-fi
-
 # Configurações para NVIDIA
 if detect_nvidia; then
     export QT_QPA_PLATFORMTHEME=qt6ct # Define o tema da plataforma Qt para qt6ct (customização de temas)
@@ -79,18 +84,22 @@ if detect_nvidia; then
     export NV_PRIME_RENDER_OFFLOAD=1 # Habilita o offload de renderização para GPUs NVidia (otimização para laptops)
     export __GL_ExperimentalPerfStrategy=1 # Habilita estratégias experimentais de desempenho da NVidia
     export QSG_RENDERER_LOOP=basic # Necessário para evitar alto uso de CPU (renderização básica)
-    # export GBM_BACKEND=nvidia-drm # Comentado para evitar conflitos
-    # export __GLX_VENDOR_LIBRARY_NAME=nvidia # NVidia 470.182.03-1+ não inicia login gráfico
     export VK_LAYER_NV_optimus=NVIDIA_only # Força o uso da GPU NVidia em sistemas com Optimus
 fi
 
 # Configurações para AMD
-if ! detect_nvidia; then
+if detect_amd; then
     export CLUTTER_BACKEND=wayland # Define o backend do Clutter como Wayland (para GPUs AMD)
     export SDL_VIDEODRIVER=wayland # Define o driver de vídeo SDL como Wayland (para GPUs AMD)
     export QT_QPA_PLATFORM=wayland # Define a plataforma Qt como Wayland (para GPUs AMD)
     export GBM_BACKEND=radeonsi # Define o backend GBM como radeonsi (para GPUs AMD)
     export LIBGL_ALWAYS_SOFTWARE=0 # Desativa a renderização por software (usa hardware AMD)
+fi
+
+# Configurações para KDE Plasma (Wayland)
+if detect_desktop_environment; then
+    export KWIN_DRM_FORM_EGL_STREAMS=1 # Melhora a compatibilidade com drivers EGL no Wayland
+    # export KWIN_COMPOSE=0 # Desativado: causa problemas com Spectacle
 fi
 
 # Configurações para GNOME (Wayland)
@@ -133,4 +142,5 @@ if detect_vm; then
     export MOZ_WEBRENDER=0 # Desativar o WebRender no Firefox (renderização por software)
     export QT_XCB_FORCE_SOFTWARE_OPENGL=1 # Forçar o uso de OpenGL por software no Qt (compatibilidade)
     export GNOME_DISABLE_HW_ACCEL=1 # Desativar aceleração de hardware no Gnome (útil para evitar problemas gráficos)
+    export GDK_BACKEND=wayland,x11 # Usar Wayland com fallback para Xwayland (útil para compatibilidade em VMs)
 fi
