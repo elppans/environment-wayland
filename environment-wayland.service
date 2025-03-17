@@ -1,0 +1,11 @@
+[Unit]
+Description=Configura variáveis de ambiente para Wayland
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/environment-wayland
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
