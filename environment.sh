@@ -105,7 +105,7 @@ fi
 # Configurações para GNOME (Wayland)
 if ! detect_desktop_environment; then
     export GDK_BACKEND=wayland # Usar o Wayland puro (para aplicativos GTK)
-    export __GL_SYNC_TO_VBLANK=0 # Desative o "Modo de Repouso" (VSync) para melhorar desempenho
+    # export __GL_SYNC_TO_VBLANK=0 # Desative o "Modo de Repouso" (VSync) para melhorar desempenho (Usar apenas se estiver enfrentando problemas específicos)
 fi
 
 # Configurações para máquinas virtuais
@@ -143,4 +143,5 @@ if detect_vm; then
     export QT_XCB_FORCE_SOFTWARE_OPENGL=1 # Forçar o uso de OpenGL por software no Qt (compatibilidade)
     export GNOME_DISABLE_HW_ACCEL=1 # Desativar aceleração de hardware no Gnome (útil para evitar problemas gráficos)
     export GDK_BACKEND=wayland,x11 # Usar Wayland com fallback para Xwayland (útil para compatibilidade em VMs)
+    export __GL_SYNC_TO_VBLANK=0 # Desative o "Modo de Repouso" (VSync) para melhorar desempenho
 fi
