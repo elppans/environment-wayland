@@ -142,6 +142,6 @@ if detect_vm; then
     export MOZ_WEBRENDER=0 # Desativar o WebRender no Firefox (renderização por software)
     export QT_XCB_FORCE_SOFTWARE_OPENGL=1 # Forçar o uso de OpenGL por software no Qt (compatibilidade)
     export GNOME_DISABLE_HW_ACCEL=1 # Desativar aceleração de hardware no Gnome (útil para evitar problemas gráficos)
-    export GDK_BACKEND=wayland,x11 # Usar Wayland com fallback para Xwayland (útil para compatibilidade em VMs)
+    # export GDK_BACKEND=wayland,x11 # Usar Wayland com fallback para Xwayland (útil para compatibilidade em VMs)
     export __GL_SYNC_TO_VBLANK=0 # Desative o "Modo de Repouso" (VSync) para melhorar desempenho
 fi
