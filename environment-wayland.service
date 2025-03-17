@@ -4,7 +4,7 @@ After=graphical-session.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/environment-wayland
+ExecStart=bash -c "source /usr/local/bin/environment-wayland"
 RemainAfterExit=yes
 
 [Install]
