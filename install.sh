@@ -1,10 +1,7 @@
 #!/bin/bash
 
 # Caminho do script que será adicionado
-LINE=". /usr/local/bin/environment-wayland"
-
-# Lista de arquivos comuns de configuração de shell
-CONFIG_FILES=(".bash_profile" ".bashrc" ".zshrc" ".profile" ".kshrc" ".cshrc")
+CONFIG_FILES=(".bash_profile" ".bashrc" ".zshrc" ".profile" ".kshrc" ".cshrc" ".config/fish/config.fish")
 
 # Diretório HOME do usuário
 HOME_DIR="$HOME"
@@ -16,12 +13,25 @@ if [ -f "environment-wayland" ]; then
     echo "Arquivo environment-wayland copiado para /usr/local/bin e permissões ajustadas"
 fi
 
+# Função para determinar qual linha adicionar
+get_line_for_shell() {
+    local file="$1"
+    if [[ "$file" == "$HOME_DIR/.config/fish/config.fish" ]]; then
+        echo "source /usr/local/bin/environment-wayland"
+    else
+        echo ". /usr/local/bin/environment-wayland"
+    fi
+}
+
 # Função para adicionar a linha se ainda não estiver presente
 add_line_if_not_exists() {
     local file="$1"
+    local line
+    line=$(get_line_for_shell "$file")
+
     if [ -f "$file" ]; then
-        if ! grep -Fxq "$LINE" "$file"; then
-            echo "$LINE" >> "$file"
+        if ! grep -Fxq "$line" "$file"; then
+            echo "$line" >> "$file"
             echo "Linha adicionada em $file"
         else
             echo "Linha já existe em $file"
@@ -39,5 +49,5 @@ done
 
 # Se nenhum arquivo for encontrado, cria o .bashrc e adiciona a linha
 DEFAULT_FILE="$HOME_DIR/.bashrc"
-echo "$LINE" >> "$DEFAULT_FILE"
+echo "$(get_line_for_shell "$DEFAULT_FILE")" >> "$DEFAULT_FILE"
 echo "Arquivo $DEFAULT_FILE criado e linha adicionada"
