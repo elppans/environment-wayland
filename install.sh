@@ -1,25 +1,31 @@
 #!/bin/bash
 
-# Caminho do script que será adicionado
-CONFIG_FILES=(".bash_profile" ".bashrc" ".zshrc" ".profile" ".kshrc" ".cshrc" ".config/fish/config.fish")
+# Lista de arquivos comuns de configuração de shell
+CONFIG_FILES=(".bash_profile" ".zshrc" ".profile" ".kshrc" ".cshrc" ".config/fish/config.fish")
 
 # Diretório HOME do usuário
 HOME_DIR="$HOME"
 
+# Arquivo do script que será adicionado
+SCRIPT_PATH="/usr/local/bin/environment-wayland"
+
+# Lista para armazenar os arquivos que foram modificados
+MODIFIED_FILES=()
+
 # Copia o arquivo para /usr/local/bin e dá permissão de execução
 if [ -f "environment-wayland" ]; then
-    sudo cp environment-wayland /usr/local/bin/
-    sudo chmod +x /usr/local/bin/environment-wayland
-    echo "Arquivo environment-wayland copiado para /usr/local/bin e permissões ajustadas"
+    sudo cp environment-wayland "$SCRIPT_PATH"
+    sudo chmod +x "$SCRIPT_PATH"
+    echo "Arquivo environment-wayland copiado para $SCRIPT_PATH e permissões ajustadas"
 fi
 
 # Função para determinar qual linha adicionar
 get_line_for_shell() {
     local file="$1"
     if [[ "$file" == "$HOME_DIR/.config/fish/config.fish" ]]; then
-        echo "source /usr/local/bin/environment-wayland"
+        echo "source $SCRIPT_PATH"
     else
-        echo ". /usr/local/bin/environment-wayland"
+        echo ". $SCRIPT_PATH"
     fi
 }
 
@@ -32,6 +38,7 @@ add_line_if_not_exists() {
     if [ -f "$file" ]; then
         if ! grep -Fxq "$line" "$file"; then
             echo "$line" >> "$file"
+            MODIFIED_FILES+=("$file")
             echo "Linha adicionada em $file"
         else
             echo "Linha já existe em $file"
@@ -39,15 +46,20 @@ add_line_if_not_exists() {
     fi
 }
 
-# Verifica e adiciona no primeiro arquivo encontrado
+# Se o usuário usa Bash, adiciona em .bash_profile ou .bashrc se necessário
+if [ -f "$HOME_DIR/.bash_profile" ]; then
+    add_line_if_not_exists "$HOME_DIR/.bash_profile"
+else
+    add_line_if_not_exists "$HOME_DIR/.bashrc"
+fi
+
+# Verifica e adiciona em todos os outros arquivos encontrados
 for file in "${CONFIG_FILES[@]}"; do
     if [ -f "$HOME_DIR/$file" ]; then
         add_line_if_not_exists "$HOME_DIR/$file"
-        exit 0
     fi
 done
 
-# Se nenhum arquivo for encontrado, cria o .bashrc e adiciona a linha
-DEFAULT_FILE="$HOME_DIR/.bashrc"
-echo "$(get_line_for_shell "$DEFAULT_FILE")" >> "$DEFAULT_FILE"
-echo "Arquivo $DEFAULT_FILE criado e linha adicionada"
+# Exibe mensagem final com os arquivos modificados
+echo "Configuração concluída! As seguintes configurações foram atualizadas:"
+printf '%s\n' "${MODIFIED_FILES[@]}"
